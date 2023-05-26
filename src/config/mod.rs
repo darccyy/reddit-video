@@ -6,7 +6,7 @@ destructs! {
     pub struct Config: Default {
         assets: Assets = Default,
         out: Out = Default,
-        content: Content = Default,
+        reddit: Reddit = Default,
         voice: Voice = Default,
     }
 
@@ -22,7 +22,7 @@ destructs! {
     }
 
     #[derive(Debug)]
-    pub struct Content: Default {
+    pub struct Reddit: Default {
         subreddit: String = "askreddit",
         sort: String = "top",
         time: String = "month",

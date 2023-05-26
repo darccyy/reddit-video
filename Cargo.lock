@@ -648,6 +648,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "reddit-video"
+version = "0.1.0"
+dependencies = [
+ "const_format",
+ "inquire",
+ "mp3-duration",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "toml",
+]
+
+[[package]]
 name = "redox_syscall"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1104,20 +1118,6 @@ name = "vcpkg"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
-
-[[package]]
-name = "video-maker"
-version = "0.1.0"
-dependencies = [
- "const_format",
- "inquire",
- "mp3-duration",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
- "toml",
-]
 
 [[package]]
 name = "want"

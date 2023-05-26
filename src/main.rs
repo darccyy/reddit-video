@@ -1,6 +1,6 @@
 use std::fs;
 
-use video_maker::config::Config;
+use reddit_video::{config::Config, fetch_posts_or_comments};
 
 fn main() {
     const CONFIG_FILENAME: &str = "./config.toml";
@@ -11,4 +11,10 @@ fn main() {
         .expect("Failed to parse config file");
 
     println!("{:#?}", config);
+
+    println!(" === Reddit Video === ");
+
+    let texts = fetch_posts_or_comments(&config.reddit);
+
+    println!("{:#?}", texts);
 }
