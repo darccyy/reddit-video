@@ -1,5 +1,8 @@
 pub mod config;
+mod number;
 pub mod reddit;
+
+use number::format_number;
 
 trait ToTextFrames {
     fn to_text_frames(self) -> Vec<String>;
@@ -45,22 +48,8 @@ pub fn fetch_posts_or_comments(config: &config::Reddit) -> Vec<String> {
 }
 
 fn choose_parent_post(posts: Vec<reddit::Post>) -> reddit::Post {
-    let post_title_options = posts.iter().map(|post| &post.title).collect();
-
-    let post_title = inquire::Select::new(
-        "Which post to take comments from? (scroll for more)",
-        post_title_options,
-    )
-    .with_page_size(12)
-    .prompt()
-    .expect("Error reading input")
-    .clone();
-
-    for post in posts {
-        if post.title == post_title {
-            return post;
-        }
-    }
-
-    panic!("No post was found with that title. This is a big problem!")
+    inquire::Select::new("Which post to take comments from? (scroll for more)", posts)
+        .with_page_size(12)
+        .prompt()
+        .expect("Error reading input")
 }

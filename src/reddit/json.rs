@@ -21,6 +21,8 @@ pub mod subreddit {
         pub title: String,
         pub selftext: String,
         pub permalink: String,
+        pub score: i32,
+        pub num_comments: u32,
     }
 }
 

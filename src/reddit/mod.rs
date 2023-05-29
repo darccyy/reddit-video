@@ -1,7 +1,9 @@
 mod json;
 
+use std::fmt::Display;
+
 use self::json::{post, subreddit};
-use crate::{config, ToTextFrames};
+use crate::{config, format_number, ToTextFrames};
 
 const USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5666.197 Safari/537.36";
 
@@ -10,11 +12,25 @@ pub struct Post {
     pub title: String,
     pub body: String,
     pub link: String,
+    pub score: u32,
+    pub comment_count: u32,
 }
 
 impl ToTextFrames for Post {
     fn to_text_frames(self) -> Vec<String> {
         vec![self.title, self.body]
+    }
+}
+
+impl Display for Post {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}🗩 {}🖢  {}",
+            format_number(self.comment_count),
+            format_number(self.score),
+            self.title
+        )
     }
 }
 
@@ -60,12 +76,16 @@ pub fn fetch_posts(config: &config::Reddit) -> Result<Vec<Post>, reqwest::Error>
             title,
             selftext,
             permalink,
+            score,
+            num_comments,
         } = child.data;
 
         posts.push(Post {
             title,
             body: selftext,
             link: permalink,
+            score: score.max(0) as u32,
+            comment_count: num_comments,
         });
     }
 
