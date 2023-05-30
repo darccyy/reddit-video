@@ -27,7 +27,7 @@ destructs! {
         sort: String = "top",
         time: String = "month",
         comments: bool = true,
-        limit: u32 = 5u32,
+        limit: usize = 500usize,
     }
 
     #[derive(Debug)]

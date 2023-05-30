@@ -1,6 +1,8 @@
 pub mod config;
-mod number;
 pub mod reddit;
+pub mod voice;
+
+mod number;
 
 use number::format_number;
 

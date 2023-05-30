@@ -1,2 +1,7 @@
 [assets]
 watermark = "what"
+
+[reddit]
+subreddit = "jokes"
+comments = false
+limit = 3

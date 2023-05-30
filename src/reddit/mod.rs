@@ -61,7 +61,7 @@ pub fn fetch_posts(config: &config::Reddit) -> Result<Vec<Post>, reqwest::Error>
         ..
     } = config;
 
-    let url = format!("https://reddit.com/r/{subreddit}/{sort}.json?t={time}&count={limit}");
+    let url = format!("https://reddit.com/r/{subreddit}/{sort}.json?t={time}&count=10000");
 
     let client = build_client();
 
@@ -87,6 +87,10 @@ pub fn fetch_posts(config: &config::Reddit) -> Result<Vec<Post>, reqwest::Error>
             score: score.max(0) as u32,
             comment_count: num_comments,
         });
+
+        if &posts.len() >= limit {
+            break;
+        }
     }
 
     Ok(posts)
@@ -98,7 +102,7 @@ pub fn fetch_comments(
 ) -> Result<Vec<Comment>, reqwest::Error> {
     let config::Reddit { limit, .. } = config;
 
-    let url = format!("https://reddit.com/{parent_link}.json?limit={limit}");
+    let url = format!("https://reddit.com/{parent_link}.json?limit=10000");
 
     let client = build_client();
 
@@ -116,6 +120,10 @@ pub fn fetch_comments(
         };
 
         comments.push(Comment { body });
+
+        if &comments.len() >= limit {
+            break;
+        }
     }
 
     Ok(comments)
