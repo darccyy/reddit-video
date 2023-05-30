@@ -1,7 +1,7 @@
 use std::fs;
 
 use reddit_video::{
-    config::Config, fetch_posts_or_comments, get_empty_temp_dir, save_voices, voice::create_voices,
+    config::Config, fetch_posts_or_comments, get_empty_temp_dir, save_voices, video, voice,
 };
 
 fn main() {
@@ -23,8 +23,11 @@ fn main() {
     println!("{:#?}", texts);
 
     println!("Creating voices...");
-    let voices = create_voices(&config.voice, &texts).expect("Failed to fetch voices");
+    let voices = voice::create_voices(&config.voice, texts).expect("Failed to fetch voices");
     save_voices(&voices, &temp_dir);
+
+    println!("Concatenating audio...");
+    video::concat_voices(&config, &temp_dir);
 
     println!("done");
 }

@@ -2,6 +2,8 @@
 pub mod config;
 /// Reddit API fetching
 pub mod reddit;
+/// Render video with ffmpeg
+pub mod video;
 /// Voice (TTS) API fetching
 pub mod voice;
 

@@ -19,6 +19,7 @@ destructs! {
     #[derive(Debug)]
     pub struct Out: Default {
         name: String = "video.mp4",
+        overwrite: bool = true,
     }
 
     #[derive(Debug)]

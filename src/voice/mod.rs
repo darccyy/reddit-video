@@ -5,11 +5,12 @@ use crate::config;
 
 #[derive(Debug)]
 pub struct Voice {
+    pub text: String,
     pub bytes: Vec<u8>,
     pub duration: Duration,
 }
 
-pub fn create_voices(config: &config::Voice, texts: &[String]) -> Result<Vec<Voice>, String> {
+pub fn create_voices(config: &config::Voice, texts: Vec<String>) -> Result<Vec<Voice>, String> {
     let mut voices = Vec::new();
     for text in texts {
         voices.push(create_voice(config, text)?);
@@ -17,7 +18,7 @@ pub fn create_voices(config: &config::Voice, texts: &[String]) -> Result<Vec<Voi
     Ok(voices)
 }
 
-fn create_voice(config: &config::Voice, text: &str) -> Result<Voice, String> {
+fn create_voice(config: &config::Voice, text: String) -> Result<Voice, String> {
     let config::Voice {
         language,
         gender,
@@ -25,18 +26,18 @@ fn create_voice(config: &config::Voice, text: &str) -> Result<Voice, String> {
         rate,
     } = config;
 
-    let text = remove_emojis(text);
+    let text = remove_emojis(&text);
 
     let url = format!("https://texttospeech.responsivevoice.org/v1/text:synthesize?text={text}&lang={language}&engine=g1&name=&pitch={pitch}&rate={rate}&volume=1&key=kvfbSITh&gender={gender}");
 
-    let attempt = || -> Result<Voice, String> {
+    let attempt = || -> Result<(Vec<u8>, Duration), String> {
         let response = reqwest::blocking::get(&url).map_err(|err| format!("{err:?}"))?;
 
         let bytes = response.bytes().map_err(|err| format!("{err:?}"))?.to_vec();
 
         let duration = get_audio_duration(&bytes).map_err(|err| format!("{err:?}"))?;
 
-        Ok(Voice { bytes, duration })
+        Ok((bytes, duration))
     };
 
     const MAX_ATTEMPTS: usize = 10;
@@ -46,7 +47,13 @@ fn create_voice(config: &config::Voice, text: &str) -> Result<Voice, String> {
         i += 1;
 
         match attempt() {
-            Ok(value) => return Ok(value),
+            Ok((bytes, duration)) => {
+                return Ok(Voice {
+                    bytes,
+                    duration,
+                    text,
+                })
+            }
 
             Err(err) => {
                 eprintln!(
