@@ -1,7 +1,9 @@
+/// Format number, human readable and right-aligned
 pub fn format_number(number: u32) -> String {
     pad_left(&human_number(number), 4, " ")
 }
 
+/// Pad left of string
 fn pad_left(string: &str, width: usize, char: &str) -> String {
     if string.len() > width {
         return string.to_string();
@@ -9,6 +11,7 @@ fn pad_left(string: &str, width: usize, char: &str) -> String {
     char.repeat(width - string.len()) + string
 }
 
+/// Display number with units, such as 'k' for 1,000
 fn human_number(number: u32) -> String {
     if number < 1_000 {
         return number.to_string();
@@ -25,17 +28,16 @@ fn human_number(number: u32) -> String {
 
     for (max, suffix, divisor, decimals) in ranges {
         if number < max {
-            return divide(number, divisor, decimals).to_string() + suffix;
+            return divide_rounded(number, divisor, decimals).to_string() + suffix;
         }
     }
 
-    return format!("{}B", divide(number, 1_000_000_000, 1));
+    return format!("{}B", divide_rounded(number, 1_000_000_000, 1));
 }
 
-fn divide(number: u32, divisor: u32, decimals: i32) -> f32 {
-    round(number as f32 / divisor as f32, decimals)
-}
-fn round(number: f32, decimals: i32) -> f32 {
+/// Divide an integer by another integer, rounding to a certain number of decimals
+fn divide_rounded(number: u32, divisor: u32, decimals: i32) -> f32 {
+    let number = number as f32 / divisor as f32;
     let int = 10f32.powi(decimals);
     (number * int).floor() / int
 }

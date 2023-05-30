@@ -1,55 +1,68 @@
+/// Create `Deserialize`-able structs for JSON responses
+macro_rules! json {
+    ( $(
+       $struct:ident $tt:tt
+    )* ) => { $(
+        json!(@single $struct $tt);
+    )* };
+
+    (@single $struct:ident { $( $key:ident : $type:ty),* $(,)? } ) => {
+        /// Deserialized JSON
+        #[derive(Debug, serde::Deserialize)]
+        pub struct $struct {
+            $( pub $key: $type, )*
+        }
+    };
+
+    (@single $struct:ident ( $( $type:ty ),* $(,)? ) ) => {
+        /// Deserialized JSON
+        #[derive(Debug, serde::Deserialize)]
+        pub struct $struct (
+            $( pub $type, )*
+        );
+    };
+}
+
+/// Response of posts of subreddit
 pub mod subreddit {
-    use serde::Deserialize;
-
-    #[derive(Debug, Deserialize)]
-    pub struct Response {
-        pub data: Data,
-    }
-
-    #[derive(Debug, Deserialize)]
-    pub struct Data {
-        pub children: Vec<Child>,
-    }
-
-    #[derive(Debug, Deserialize)]
-    pub struct Child {
-        pub data: ChildData,
-    }
-
-    #[derive(Debug, Deserialize)]
-    pub struct ChildData {
-        pub title: String,
-        pub selftext: String,
-        pub permalink: String,
-        pub score: i32,
-        pub num_comments: u32,
+    json! {
+        Response {
+            data: Data,
+        }
+        Data {
+            children: Vec<Child>,
+        }
+        Child {
+            data: ChildData,
+        }
+        ChildData {
+            title: String,
+            selftext: String,
+            permalink: String,
+            score: i32,
+            num_comments: u32,
+        }
     }
 }
 
+/// Response of comments of post
 pub mod post {
-    use super::subreddit;
-    use serde::Deserialize;
-
-    #[derive(Debug, Deserialize)]
-    pub struct Response(pub subreddit::Response, pub Comments);
-
-    #[derive(Debug, Deserialize)]
-    pub struct Comments {
-        pub data: Data,
-    }
-
-    #[derive(Debug, Deserialize)]
-    pub struct Data {
-        pub children: Vec<Child>,
-    }
-
-    #[derive(Debug, Deserialize)]
-    pub struct Child {
-        pub data: ChildData,
-    }
-
-    #[derive(Debug, Deserialize)]
-    pub struct ChildData {
-        pub body: Option<String>,
+    json! {
+        Response (
+            super::subreddit::Response,
+            Comments,
+        )
+        Comments {
+            data: Data,
+        }
+        Data {
+            children: Vec<Child>,
+        }
+        Child {
+            data: ChildData,
+        }
+        ChildData {
+            body: Option<String>,
+        }
     }
 }
