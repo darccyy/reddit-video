@@ -40,9 +40,6 @@ pub fn apply_video_audio(config: &Config, dir: &str) {
     // Copy data without re-encoding
     ffmpeg.args(["-c", "copy"]);
 
-    // Trim to audio length
-    // ffmpeg.arg("-shortest");
-
     // Output path
     ffmpeg.arg(format!("{dir}/video.mp4"));
 
@@ -76,6 +73,19 @@ pub fn render_video(config: &Config, dir: &str, voices: &[Voice]) {
         filters.push(filter);
     }
 
+    if let Some(watermark) = &config.assets.watermark {
+        let drawtext_options = DrawtextOptions {
+            ..Default::default()
+        };
+
+        filters.push(drawtext_filter(
+            &drawtext_options,
+            watermark,
+            Duration::ZERO,
+            total_duration,
+        ));
+    }
+
     let filepath = format!("{dir}/filter.txt");
     fs::write(&filepath, filters.join(",")).expect("Failed to write temporary filter file");
     ffmpeg.args(["-filter_complex_script", &filepath]);
@@ -86,10 +96,8 @@ pub fn render_video(config: &Config, dir: &str, voices: &[Voice]) {
         "-ss",
         "00:00:00",
         "-to",
-        // "00:00:03",
         &timestamp_from_duration(total_duration + OUTRO_TIME),
     ]);
-    // ffmpeg.arg("-shortest");
 
     // Output file
     ffmpeg.arg(&config.out.name);
@@ -98,7 +106,6 @@ pub fn render_video(config: &Config, dir: &str, voices: &[Voice]) {
     ffmpeg.run();
 }
 
-#[allow(dead_code)]
 /// format timestamp (hh:mm:ss) from time in seconds
 ///
 /// todo add milliseconds
@@ -119,7 +126,6 @@ fn timestamp_from_duration(duration: Duration) -> String {
     )
 }
 
-#[allow(dead_code)]
 /// Add leading zero to number, if less than desired digit length
 fn leading_zeros(number: u64, length: usize) -> String {
     let number = number.to_string();

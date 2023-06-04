@@ -1,7 +1,8 @@
 use std::fs;
 
 use reddit_video::{
-    config::Config, fetch_posts_or_comments, get_empty_temp_dir, save_voices, video, voice,
+    config::Config, create_empty_temp_dir, fetch_posts_or_comments, remove_temp_dir, save_voices,
+    video, voice,
 };
 use stilo::println_styles;
 
@@ -23,7 +24,7 @@ fn main() {
 
     println!("{:#?}", config);
 
-    let temp_dir = get_empty_temp_dir();
+    let temp_dir = create_empty_temp_dir();
 
     info!("Fetching content...");
     let texts = fetch_posts_or_comments(&config.reddit);
@@ -50,4 +51,5 @@ fn main() {
     video::render_video(&config, &temp_dir, &voices);
 
     println_styles!("Completed successfully!": Green + bold);
+    remove_temp_dir(&temp_dir);
 }

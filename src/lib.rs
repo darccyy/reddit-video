@@ -72,16 +72,11 @@ fn choose_parent_post(posts: Vec<reddit::Post>) -> reddit::Post {
 }
 
 /// Create temp directory, empty contents, and return path
-pub fn get_empty_temp_dir() -> String {
-    // Path to directory
-    let temp = env::temp_dir().to_string_lossy().to_string();
-    let name = env!("CARGO_PKG_NAME");
-    let dir = format!("{temp}/{name}");
+pub fn create_empty_temp_dir() -> String {
+    let dir = get_temp_dir();
 
     // Remove and re-create
-    if Path::new(&dir).exists() {
-        fs::remove_dir_all(&dir).expect("Failed to remove temp dir");
-    }
+    remove_temp_dir(&dir);
     fs::create_dir(&dir).expect("Failed to create temp dir");
 
     // Create subfolders
@@ -91,6 +86,20 @@ pub fn get_empty_temp_dir() -> String {
     }
 
     dir
+}
+
+/// Remove temp directory if it exists
+pub fn remove_temp_dir(dir: &str) {
+    if Path::new(&dir).exists() {
+        fs::remove_dir_all(&dir).expect("Failed to remove temp dir");
+    }
+}
+
+// Get path to temp directory
+fn get_temp_dir() -> String {
+    let temp = env::temp_dir().to_string_lossy().to_string();
+    let name = env!("CARGO_PKG_NAME");
+    format!("{temp}/{name}")
 }
 
 /// Save voices to temp directory, create list file for ffmpeg
