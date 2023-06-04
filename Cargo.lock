@@ -658,6 +658,7 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
+ "stilo",
  "toml",
 ]
 
@@ -897,6 +898,12 @@ dependencies = [
  "libc",
  "winapi",
 ]
+
+[[package]]
+name = "stilo"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1da0ff3c8708532c7b1189ed9fd4078d10fb9f0009c60e34ae096346977c6334"
 
 [[package]]
 name = "syn"

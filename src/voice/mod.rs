@@ -26,9 +26,9 @@ fn create_voice(config: &config::Voice, text: String) -> Result<Voice, String> {
         rate,
     } = config;
 
-    let text = remove_emojis(&text);
+    let text_filtered = remove_emojis(&text);
 
-    let url = format!("https://texttospeech.responsivevoice.org/v1/text:synthesize?text={text}&lang={language}&engine=g1&name=&pitch={pitch}&rate={rate}&volume=1&key=kvfbSITh&gender={gender}");
+    let url = format!("https://texttospeech.responsivevoice.org/v1/text:synthesize?text={text_filtered}&lang={language}&engine=g1&name=&pitch={pitch}&rate={rate}&volume=1&key=kvfbSITh&gender={gender}");
 
     let attempt = || -> Result<(Vec<u8>, Duration), String> {
         let response = reqwest::blocking::get(&url).map_err(|err| format!("{err:?}"))?;
@@ -75,6 +75,17 @@ fn get_audio_duration(bytes: &[u8]) -> Result<Duration, mp3_duration::MP3Duratio
 }
 
 fn remove_emojis(text: &str) -> String {
-    let emoji_regex = Regex::new(r#"\p{Emoji}"#).unwrap();
-    emoji_regex.replace_all(text, "").to_string()
+    let regex = Regex::new(concat!(
+        "[",
+        "\u{01F600}-\u{01F64F}", // emoticons
+        "\u{01F300}-\u{01F5FF}", // symbols & pictographs
+        "\u{01F680}-\u{01F6FF}", // transport & map symbols
+        "\u{01F1E0}-\u{01F1FF}", // flags (iOS)
+        "\u{002702}-\u{0027B0}",
+        "\u{0024C2}-\u{01F251}",
+        "]+",
+    ))
+    .unwrap();
+
+    regex.replace_all(&text, "").to_string()
 }
