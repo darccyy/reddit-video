@@ -1,8 +1,6 @@
 use std::fs;
 
-use reddit_video::{
-    config::Config, fetch_posts_or_comments, get_empty_temp_dir, save_voices, video, voice,
-};
+use reddit_video::{config::Config, get_empty_temp_dir, save_voices, video, voice};
 
 fn main() {
     const CONFIG_FILENAME: &str = "./config.toml";
@@ -18,7 +16,12 @@ fn main() {
 
     let temp_dir = get_empty_temp_dir();
 
-    let texts = fetch_posts_or_comments(&config.reddit);
+    // let texts = fetch_posts_or_comments(&config.reddit);
+    let texts = vec![
+        "this is some text".to_string(),
+        // "some more text\nactually".to_string(),
+        // "blah blah".to_string(),
+    ];
 
     println!("{:#?}", texts);
 
@@ -28,6 +31,10 @@ fn main() {
 
     println!("Concatenating audio...");
     video::concat_voices(&config, &temp_dir);
+    println!("Adding audio to video...");
+    video::apply_video_audio(&config, &temp_dir);
+    println!("Rendering video with text...");
+    video::render_video(&config, &temp_dir, &voices);
 
     println!("done");
 }
