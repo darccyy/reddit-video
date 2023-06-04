@@ -23,3 +23,14 @@ libva error: /usr/lib/dri/i965_drv_video.so init failed
 [00007f2020007480] gl gl: Initialized libplacebo v5.229.2 (API v229)
 Failed to open VDPAU backend libvdpau_va_gl.so: cannot open shared object file: No such file or directory
 [00007f2020007480] gl gl: Initialized libplacebo v5.229.2 (API v229)
+[0000561b93b7f5e0] main libvlc: Running vlc with the default interface. Use 'cvlc' to use vlc without interface.
+[00007f31e0007480] gl gl: Initialized libplacebo v5.229.2 (API v229)
+libva error: /usr/lib/dri/i965_drv_video.so init failed
+[00007f31e0007480] glconv_vaapi_x11 gl error: vaInitialize: unknown libva error
+libva error: /usr/lib/dri/i965_drv_video.so init failed
+[00007f31e0007480] glconv_vaapi_drm gl error: vaInitialize: unknown libva error
+libva error: /usr/lib/dri/i965_drv_video.so init failed
+[00007f31e0007480] glconv_vaapi_drm gl error: vaInitialize: unknown libva error
+[00007f31e0007480] gl gl: Initialized libplacebo v5.229.2 (API v229)
+Failed to open VDPAU backend libvdpau_va_gl.so: cannot open shared object file: No such file or directory
+[00007f31e0007480] gl gl: Initialized libplacebo v5.229.2 (API v229)

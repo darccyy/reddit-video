@@ -75,6 +75,8 @@ pub fn render_video(config: &Config, dir: &str, voices: &[Voice]) {
 
     if let Some(watermark) = &config.assets.watermark {
         let drawtext_options = DrawtextOptions {
+            x: "w*0.8-text_w/2".to_string(),
+            y: "h*0.3-text_h/2".to_string(),
             ..Default::default()
         };
 

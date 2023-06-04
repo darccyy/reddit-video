@@ -66,7 +66,7 @@ pub fn fetch_posts_or_comments(config: &config::Reddit) -> Vec<Text> {
 /// User select post to get comments of
 fn choose_parent_post(posts: Vec<reddit::Post>) -> reddit::Post {
     inquire::Select::new("Which post to take comments from? (scroll for more)", posts)
-        .with_page_size(12)
+        .with_page_size(30)
         .prompt()
         .expect("Error reading input")
 }

@@ -1,7 +1,7 @@
 [assets]
-watermark = "what"
+watermark = "☝️🤓"
 
 [reddit]
-subreddit = "jokes"
-comments = false
-limit = 3
+# subreddit = "jokes"
+# comments = false
+limit = 100
